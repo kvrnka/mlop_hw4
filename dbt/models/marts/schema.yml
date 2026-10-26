@@ -1,0 +1,171 @@
+version: 2
+
+models:
+  - name: mart_fraud_by_category
+    description: >
+      Анализ мошеннических транзакций
+      по категориям покупок.
+
+    columns:
+      - name: cat_id
+        description: "Категория транзакции"
+        data_tests:
+          - not_null
+          - unique
+
+      - name: total_transactions
+        description: "Общее число транзакций"
+        data_tests:
+          - not_null
+
+      - name: fraud_count
+        description: "Количество фродовых транзакций"
+        data_tests:
+          - not_null
+
+      - name: fraud_rate
+        description: "Процент мошеннических транзакций"
+
+      - name: total_amount
+        description: "Сумма всех транзакций"
+
+      - name: fraud_amount
+        description: "Сумма фродовых транзакций"
+  
+
+  - name: mart_daily_state_metrics
+    description: >
+      Дневные агрегированные метрики транзакций
+      по штатам США.
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - transaction_date
+              - us_state
+
+    columns:
+      - name: transaction_date
+        description: "Дата транзакции"
+        data_tests:
+          - not_null
+
+      - name: us_state
+        description: "Штат США"
+        data_tests:
+          - not_null
+
+      - name: total_transactions
+        description: "Количество транзакций"
+
+      - name: total_amount
+        description: "Общая сумма транзакций"
+
+      - name: avg_amount
+        description: "Средний чек"
+
+      - name: p95_amount
+        description: "95-й перцентиль суммы"
+
+      - name: large_transactions
+        description: "Количество крупных транзакций"
+
+      - name: large_transaction_share
+        description: "Доля крупных транзакций, %"
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+  
+  - name: mart_fraud_by_state
+    description: >
+      Географический анализ мошеннических
+      транзакций по штатам США.
+
+    columns:
+      - name: us_state
+        description: "Штат США"
+        data_tests:
+          - not_null
+          - unique
+
+      - name: total_transactions
+        description: "Общее количество транзакций"
+        data_tests:
+          - not_null
+
+      - name: fraud_count
+        description: "Количество мошеннических транзакций"
+
+      - name: fraud_rate
+        description: "Процент мошенничества"
+
+      - name: unique_customers
+        description: >
+          Приблизительное количество уникальных
+          клиентов по имени и адресу.
+
+      - name: unique_merchants
+        description: >
+          Количество уникальных названий мерчантов.
+
+      - name: total_amount
+        description: "Общая сумма транзакций"
+
+      - name: fraud_amount
+        description: "Сумма мошеннических транзакций"
+  
+  - name: mart_customer_risk_profile
+    description: >
+      Профиль риска клиентов на основе истории
+      транзакций и доли мошеннических операций.
+      Клиент определяется приближённо по имени
+      и адресу. Уровни риска рассчитываются
+      по заданным эвристическим правилам.
+
+    columns:
+      - name: customer_key
+        description: >
+          Вычисляемый идентификатор клиента
+          на основе хеша имени и адреса.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: total_transactions
+        description: "Количество транзакций клиента"
+        data_tests:
+          - not_null
+
+      - name: fraud_count
+        description: "Количество фродовых транзакций"
+
+      - name: fraud_rate
+        description: "Процент мошеннических операций"
+
+      - name: avg_amount
+        description: "Средний чек клиента"
+
+      - name: total_amount
+        description: "Общая сумма покупок клиента"
+
+      - name: first_transaction_time
+        description: "Время первой транзакции"
+
+      - name: last_transaction_time
+        description: "Время последней транзакции"
+
+      - name: risk_level
+        description: >
+          Эвристический уровень риска клиента:
+          HIGH, MEDIUM или LOW.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - HIGH
+                  - MEDIUM
+                  - LOW

@@ -1,0 +1,12 @@
+.env
+.DS_Store
+__pycache__/
+.venv/
+
+# Большие исходные файлы
+data/*.csv
+
+# dbt
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/

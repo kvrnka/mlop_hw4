@@ -1,0 +1,13 @@
+fraud_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: clickhouse
+      driver: http
+      host: localhost
+      port: 8123
+      user: dbt_user
+      password: "{{ env_var('CLICKHOUSE_PASSWORD') }}"
+      schema: transactions_db
+      secure: false
+      threads: 4
