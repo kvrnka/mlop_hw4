@@ -1,0 +1,37 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: transactions_db
+    description: >
+      Исходные данные о финансовых транзакциях
+      из ClickHouse.
+
+    tables:
+      - name: transactions
+        description: >
+          Транзакции клиентов с суммами,
+          географическими данными
+          и признаком мошенничества.
+
+        columns:
+          - name: transaction_time
+            description: "Дата и время транзакции"
+
+          - name: merch
+            description: "Название мерчанта"
+
+          - name: cat_id
+            description: "Категория транзакции"
+
+          - name: amount
+            description: "Сумма транзакции"
+
+          - name: us_state
+            description: "Штат США"
+
+          - name: target
+            description: >
+              Фактический признак мошенничества:
+              0 — обычная транзакция,
+              1 — мошенническая.

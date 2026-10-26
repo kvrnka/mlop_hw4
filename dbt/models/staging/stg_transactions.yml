@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    description: >
+      Подготовленные данные транзакций
+      с вычисляемыми полями.
+
+    columns:
+      - name: transaction_time
+        description: "Дата и время транзакции"
+        data_tests:
+          - not_null
+
+      - name: target
+        description: "Признак фрода: 0 или 1"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+                quote: false
+
+      - name: amount
+        description: "Сумма транзакции"
+
+      - name: amount_bucket
+        description: "Сегмент транзакции по сумме"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - SMALL
+                  - MEDIUM
+                  - LARGE
+                  - UNKNOWN
